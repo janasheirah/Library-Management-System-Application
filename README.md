@@ -17,9 +17,9 @@ also an excellent way to monitor books, lower the risk of error and reduce the c
 Moreover, it makes the whole process of getting the books more accessible and available to a wider variety of people.
 
 
-A *bulleted* list:
-- item 1
-- item 2
-- item 3
-
-An example of text with **bold** and *italic* fonts.  
+**User stories**:
+-   As a user, I want to be able to create an account on the library application system.
+-	As a user, I want to be able to add a book to my cart.
+-	As a user, I want to be able to view the list of books in my cart and their deadlines.
+-	As a user, I want to be able to mark a book as read on my account.
+-	As a user, I want to be able to search for books by author and genre.

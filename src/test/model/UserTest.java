@@ -41,17 +41,17 @@ public class UserTest {
 
     @Test
     public void testCheckOutBook() {
-        user1.checkOutBook(lib, book1);
+        assertTrue(user1.checkOutBook(lib, book1));
         assertEquals(1, user1.getCheckOutCart().size());
         assertEquals(book1, user1.getCheckOutCart().get(0));
     }
 
     @Test
     public void testCheckOutMultipleBooks() {
-        user1.checkOutBook(lib, book1);
-        user1.checkOutBook(lib, book2);
-        user1.checkOutBook(lib, book3); // book cannot be added
-        user1.checkOutBook(lib, book4);
+        assertTrue(user1.checkOutBook(lib, book1));
+        assertTrue(user1.checkOutBook(lib, book2));
+        assertFalse(user1.checkOutBook(lib, book3)); // book cannot be added
+        assertTrue(user1.checkOutBook(lib, book4));
         assertEquals(3, user1.getCheckOutCart().size());
         assertEquals(book1, user1.getCheckOutCart().get(0));
     }

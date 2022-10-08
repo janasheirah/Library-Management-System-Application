@@ -10,12 +10,10 @@ public class Library {
     private String name;
     private Book bookVariable;
     private List<String> listOfTitles;
-    private List<String> listOfBooksByName;
 
     // EFFECTS: constructs a library with a name and a list of books
     public Library(String name) {
         this.name = name;
-        listOfBooksByName = new ArrayList<>();
         listOfBooks = new ArrayList<Book>();
         Book hungerGames = new Book("The Hunger Games", "Suzanne Collins", "Fantasy");
         Book harryPotter = new Book("Harry Potter", "J.K. Rowling", "Fantasy");
@@ -42,14 +40,6 @@ public class Library {
     // EFFECTS: returns the list of books
     public List<Book> getListOfBooks() {
         return listOfBooks;
-    }
-
-    // EFFECTS: returns list of book names in list of books
-    public List<String> getListOfBooksByName() {
-        for (Book book : listOfBooks) {
-            listOfBooksByName.add(book.getBookName());
-        }
-        return getListOfBooksByName();
     }
 
     // EFFECTS: returns list of book titles

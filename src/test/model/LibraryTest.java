@@ -58,7 +58,16 @@ public class LibraryTest {
     @Test
     public void testSearchByTitle() {
         assertEquals(book1, testLibrary.searchForBookByTitle("The Book Thief"));
+        // how to test return null?
     }
+
+    @Test
+    public void testGetBookVariable() {
+        testLibrary.searchForBookByTitle("The Book Thief");
+        assertEquals(book1, testLibrary.getBookVariable());
+    }
+
+    // getlistoftitles
 }
 
 

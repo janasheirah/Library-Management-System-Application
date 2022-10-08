@@ -7,7 +7,6 @@ import java.util.List;
 public class User {
 
     private List<Book> checkOutCart;
-    private List<String> checkOutCartByName;
     private String name;
     private Book bk;
 
@@ -15,7 +14,6 @@ public class User {
     public User(String name) {
         this.name = name;
         checkOutCart = new ArrayList<>();
-        checkOutCartByName = new ArrayList<>();
     }
 
     // getters
@@ -29,22 +27,14 @@ public class User {
         return checkOutCart;
     }
 
-    // MODIFIES: this
-    // EFFECTS: returns the user checkout cart with book names
-    public List<String> getCheckOutCartByName() {
-        for (Book book : checkOutCart) {
-            checkOutCartByName.add(book.getBookName());
-        }
-        return getCheckOutCartByName();
-    }
-
     // EFFECTS: adds book to user's cart if it is available to borrow and sets the loan status to true
-    public List<Book> checkOutBook(Library lib, Book bk) {
+    public boolean checkOutBook(Library lib, Book bk) {
         if (bk.availableToBorrow(lib, bk)) {
             bk.setLoanStatus(true);
             checkOutCart.add(bk);
+            return true;
         }
-        return checkOutCart;
+        return false;
     }
 
     // MODIFIES: this

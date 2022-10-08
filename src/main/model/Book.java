@@ -1,8 +1,5 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 // Represents a book having a name, author, genre and if it is on loan
 public class Book {
 
@@ -11,7 +8,7 @@ public class Book {
     private String genre; // types: romance, fiction, non fiction, mystery, biography
     private boolean isOnLoan;
 
-    // EFFECTS: constructs a book object with title, author, genre, not on loan and an empty checkout cart
+    // EFFECTS: constructs a book object with title, author, genre, sets it to not be on loan
     public Book(String bookName, String author, String genre) {
         this.bookName = bookName;
         this.author = author;
@@ -21,32 +18,34 @@ public class Book {
 
     // getters
 
+    // EFFECTS: returns book name
     public String getBookName() {
         return bookName;
     }
 
+    // EFFECTS: returns book author
     public String getAuthor() {
         return author;
     }
 
+    // EFFECTS: returns book genre
     public String getGenre() {
         return genre;
     }
 
-    // EFFECTS: returns the value of isOnLoan
+    // EFFECTS: returns the value isOnLoan (whether book is on loan)
     public boolean onLoan() {
         return isOnLoan;
     }
 
     // setters
     // MODIFIES: this
-    // EFFECTS: sets the status of isOnLoan to parameter
+    // EFFECTS: sets the status of isOnLoan to parameter defined
     public void setLoanStatus(boolean b) {
         isOnLoan = b;
     }
 
     // REQUIRES: book != null
-    // MODIFIES: this
     // EFFECTS: returns true if the book is in stock and available to borrow
     public boolean availableToBorrow(Library library, Book book) {
         return library.inStock(book) && !book.onLoan();

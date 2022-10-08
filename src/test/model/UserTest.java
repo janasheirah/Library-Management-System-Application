@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -36,8 +35,8 @@ public class UserTest {
 
     @Test
     public void testConstructor() {
-       assertEquals("Jana", user1.getName());
-      // assertEquals(0, user1.getCheckOutCart().size());
+        assertEquals("Jana", user1.getName());
+        assertEquals(0, user1.getCheckOutCart().size());
     }
 
     @Test
@@ -62,7 +61,18 @@ public class UserTest {
         book2.setLoanStatus(true);
         assertTrue(user1.returnBook(book2));
         assertFalse(book2.onLoan()); // check that loan status is now false
-        assertFalse(user1.returnBook(book1));
+        assertFalse(user1.returnBook(book1)); // book was never on loam
+    }
+
+    @Test
+    public void testReturnMultipleBooks() {
+        user1.checkOutBook(lib, book1);
+        user1.checkOutBook(lib, book2);
+        assertTrue(user1.returnBook(book1));
+        assertTrue(user1.returnBook(book2));
+        assertFalse(user1.returnBook(book3)); // was never checked out
+        assertFalse(book1.onLoan()); // check that loan status is now false
+        assertFalse(book2.onLoan());
     }
 
 

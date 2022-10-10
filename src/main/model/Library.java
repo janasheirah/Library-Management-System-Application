@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 // Represents library with list of books available
@@ -9,12 +10,11 @@ public class Library {
     private List<Book> listOfBooks;
     private String name;
     private Book bookVariable;
-    private List<String> listOfTitles;
 
     // EFFECTS: constructs a library with a name and a list of books
     public Library(String name) {
         this.name = name;
-        listOfBooks = new ArrayList<Book>();
+        listOfBooks = new ArrayList<>();
         Book hungerGames = new Book("The Hunger Games", "Suzanne Collins", "Fantasy");
         Book harryPotter = new Book("Harry Potter", "J.K. Rowling", "Fantasy");
         listOfBooks.add(hungerGames);
@@ -27,8 +27,8 @@ public class Library {
         Book goneGirl = new Book("Gone Girl", "Gillian Flynn", "Mystery");
         listOfBooks.add(theSilentPatient);
         listOfBooks.add(goneGirl);
-        Book inColdBlood = new Book("In Cold Blood", "Truman Capote", "Non-Fiction");
-        Book educated = new Book("Educated", "Tara Westover", "Non-Fiction");
+        Book inColdBlood = new Book("In Cold Blood", "Truman Capote", "Non Fiction");
+        Book educated = new Book("Educated", "Tara Westover", "Non Fiction");
         listOfBooks.add(inColdBlood);
         listOfBooks.add(educated);
         Book steveJobs = new Book("Steve Jobs", "Walter Isaacson", "Biography");
@@ -42,8 +42,14 @@ public class Library {
         return listOfBooks;
     }
 
-    // EFFECTS: returns list of book titles
+    // MODIFIES: this
+    // EFFECTS: returns the list of book titles available in the library
     public List<String> getListOfTitles() {
+        List<String> listOfTitles = new LinkedList<>();
+
+        for (Book b : listOfBooks) {
+            listOfTitles.add(b.getBookName());
+        }
         return listOfTitles;
     }
 
@@ -52,6 +58,7 @@ public class Library {
         return bookVariable;
     }
 
+    // REQUIRES: genre is one of: Fantasy, Non Fiction, Romance, Mystery, Biography
     // EFFECTS: returns books available according to genre searched for by user
     public List<String> searchForBook(String genre) {
         ArrayList<String> booksByGenre = new ArrayList<>();
@@ -63,6 +70,7 @@ public class Library {
         return booksByGenre;
     }
 
+    // REQUIRES: title is in listOfTitles
     // EFFECTS: returns books available according to title searched for by user
     public Book searchForBookByTitle(String name) {
         for (Book book : listOfBooks) {
@@ -81,6 +89,7 @@ public class Library {
         return listOfBooks.contains(book);
     }
 
+    // MODIFIES: this, listOfBooks ?
     // EFFECTS: adds a new book to library list of books
     public void addBook(String bookName, String author, String genre) {
         Book book = new Book(bookName, author, genre);

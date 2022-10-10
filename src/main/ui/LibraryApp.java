@@ -18,6 +18,7 @@ public class LibraryApp {
 
     // EFFECTS: runs the library application
     public LibraryApp() {
+        System.out.println("Hello, Welcome to the Vancouver Public Library!");
         runTeller();
     }
 
@@ -65,7 +66,6 @@ public class LibraryApp {
     // MODIFIES: this
     // EFFECTS: initializes accounts
     private void init() {
-        user1 = new User("Joe");
         input = new Scanner(System.in);
         input.useDelimiter("\n");
     }
@@ -112,7 +112,7 @@ public class LibraryApp {
         System.out.print("Enter the title of the book you want to checkout\n");
         String title = input.next();
 
-        if (title != null) { // if title in list of titles, if book is available to borrow
+        if (vpl.getListOfTitles().contains(title)) { // if title in list of titles, if book is available to borrow
             vpl.searchForBookByTitle(title);
             if (user1.checkOutBook(vpl, vpl.getBookVariable())) {
                 System.out.println("This book is now checked out: " + vpl.getBookVariable().getBookName() + " by "
@@ -141,16 +141,22 @@ public class LibraryApp {
         System.out.print("Enter the title of the book you want to return\n");
         String title = input.next();
 
-        if (title != null) { // if book was on loan by user or title in brdo
-            vpl.searchForBookByTitle(title);
-            if (user1.returnBook(vpl.getBookVariable())) {
-                System.out.println("This book is now returned: " + vpl.getBookVariable().getBookName() + " by "
-                        + vpl.getBookVariable().getAuthor());
+        if (vpl.getListOfTitles().contains(title)) {
+            if (user1.getCheckOutCartByTitle().contains(title)) {
+                vpl.searchForBookByTitle(title);
+                if (user1.returnBook(vpl.getBookVariable())) {
+                    System.out.println("This book is now returned: " + vpl.getBookVariable().getBookName() + " by "
+                            + vpl.getBookVariable().getAuthor());
+                }
             } else {
-                System.out.println("This book was not on loan and cannot be returned\n");
+                System.out.println("This book was not on loan so not valid to be returned\n");
             }
+        } else {
+            System.out.println("Sorry, this book is not available in this library."); // change message
         }
     }
+
 }
+
 
 

@@ -5,10 +5,11 @@ public class Book {
 
     private String bookName; // title of the book
     private String author;
-    private String genre; // types: romance, fiction, non fiction, mystery, biography
+    private String genre; // types: fantasy, non fiction, romance, mystery, biography
     private boolean isOnLoan;
 
-    // EFFECTS: constructs a book object with title, author, genre, sets it to not be on loan
+    // MODIFIES: this
+    // EFFECTS: constructs a book object with title, author, genre, and sets it to not be on loan
     public Book(String bookName, String author, String genre) {
         this.bookName = bookName;
         this.author = author;

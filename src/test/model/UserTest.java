@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class UserTest {
 
-    private ArrayList<Book> checkOutCart;
     private Book book1;
     private Book book2;
     private Book book3;
@@ -73,6 +72,14 @@ public class UserTest {
         assertFalse(user1.returnBook(book3)); // was never checked out
         assertFalse(book1.onLoan()); // check that loan status is now false
         assertFalse(book2.onLoan());
+    }
+
+    @Test
+    public void testGetCheckOutCartByTitle() {
+        user1.checkOutBook(lib, book1);
+        user1.checkOutBook(lib, book2);
+        assertEquals(2, user1.getCheckOutCartByTitle().size());
+        assertEquals("Harry Potter", user1.getCheckOutCartByTitle().get(0));
     }
 
 

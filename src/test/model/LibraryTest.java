@@ -67,7 +67,11 @@ public class LibraryTest {
         assertEquals(book1, testLibrary.getBookVariable());
     }
 
-    // getlistoftitles
+    @Test
+    public void testGetBookTitles() {
+        assertEquals(11, testLibrary.getListOfTitles().size());
+        assertEquals("The Book Thief", testLibrary.getListOfTitles().get(10));
+    }
 }
 
 

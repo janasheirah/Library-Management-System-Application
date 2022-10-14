@@ -41,24 +41,9 @@ public class LibraryTest {
     }
 
     @Test
-    public void testAddBook() {
-        testLibrary.addBook("To Kill A Mocking Bird", "Harper Lee", "Fantasy");
-        assertEquals(12, testLibrary.getListOfBooks().size());
-        assertEquals("To Kill A Mocking Bird", testLibrary.getListOfBooks().get(11).getBookName());
-    }
-
-    @Test
-    public void testAddMultipleBooks() {
-        testLibrary.addBook("To Kill A Mocking Bird", "Harper Lee", "Fiction");
-        testLibrary.addBook("Who moved my cheese?", "Spencer Johnson", "Non-Fiction");
-        assertEquals(13, testLibrary.getListOfBooks().size());
-        assertEquals("Who moved my cheese?", testLibrary.getListOfBooks().get(12).getBookName());
-    }
-
-    @Test
     public void testSearchByTitle() {
         assertEquals(book1, testLibrary.searchForBookByTitle("The Book Thief"));
-        // how to test return null?
+        assertNull(testLibrary.searchForBookByTitle("November 9"));
     }
 
     @Test

@@ -2,6 +2,7 @@ package ui;
 
 
 import model.Book;
+import model.Librarian;
 import model.Library;
 import model.User;
 
@@ -13,18 +14,21 @@ import java.util.Scanner;
 public class LibraryApp {
 
     private User user1;
+    private Librarian librarian;
     private Scanner input;
     Library vpl = new Library("Vancouver Public Library");
 
     // EFFECTS: runs the library application
+    // citation: TellerApp() from CPSC 210 repo
     public LibraryApp() {
         System.out.println("Hello, Welcome to the Vancouver Public Library!");
-        runTeller();
+        // runMenu();
+        runLibraryUser();
     }
 
     // MODIFIES: this
     // EFFECTS: processes user input
-    private void runTeller() {
+    private void runLibraryUser() {
         boolean keepGoing = true;
         String command = null;
 
@@ -58,6 +62,8 @@ public class LibraryApp {
             doView();
         } else if (command.equals("r")) {
             doReturn();
+        } else if (command.equals("a")) {
+            doAdd();
         } else {
             System.out.println("Selection not valid...");
         }
@@ -66,6 +72,8 @@ public class LibraryApp {
     // MODIFIES: this
     // EFFECTS: initializes accounts
     private void init() {
+        user1 = new User("Joe");
+        librarian = new Librarian("Jan Doe");
         input = new Scanner(System.in);
         input.useDelimiter("\n");
     }
@@ -78,6 +86,7 @@ public class LibraryApp {
         System.out.println("\tc -> checkout book by searching book title");
         System.out.println("\tv -> view books in cart");
         System.out.println("\tr -> return book");
+        System.out.println("\ta -> add book to list of books");
         System.out.println("\tq -> quit");
     }
 
@@ -93,7 +102,7 @@ public class LibraryApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: conducts a search by genre
+    // EFFECTS: conducts a search by genre of book
     private void doSearch() {
         System.out.print("Enter one of the following genre: Fantasy, Non Fiction, Romance, Mystery, Biography\n");
         String genre = input.next();
@@ -112,7 +121,7 @@ public class LibraryApp {
         System.out.print("Enter the title of the book you want to checkout\n");
         String title = input.next();
 
-        if (vpl.getListOfTitles().contains(title)) { // if title in list of titles, if book is available to borrow
+        if (vpl.getListOfTitles().contains(title)) {
             vpl.searchForBookByTitle(title);
             if (user1.checkOutBook(vpl, vpl.getBookVariable())) {
                 System.out.println("This book is now checked out: " + vpl.getBookVariable().getBookName() + " by "
@@ -128,15 +137,15 @@ public class LibraryApp {
     // EFFECTS: prints the list of book names and author for books in checkout cart
     public void doView() {
         List<Book> totalCheckOutCart = new LinkedList<>();
-        totalCheckOutCart.addAll(user1.getCheckOutCart());
 
+        totalCheckOutCart.addAll(user1.getCheckOutCart());
         System.out.println("Here's your checkout cart: \n");
         for (Book b : totalCheckOutCart) {
             System.out.println("'" + b.getBookName() + "'" + " by " + b.getAuthor());
         }
     }
 
-    // EFFECTS: conducts return book transaction
+    // EFFECTS: conducts return book operation
     private void doReturn() {
         System.out.print("Enter the title of the book you want to return\n");
         String title = input.next();
@@ -152,8 +161,21 @@ public class LibraryApp {
                 System.out.println("This book was not on loan so not valid to be returned\n");
             }
         } else {
-            System.out.println("Sorry, this book is not available in this library."); // change message
+            System.out.println("Sorry, this book is not available in this library.");
         }
+    }
+
+    // EFFECTS: conducts adding book method
+    public void doAdd() {
+        System.out.println("Enter the name of the book you want to add \n");
+        String name = input.next();
+        System.out.println("Enter the name of the author of the book \n");
+        String author = input.next();
+        System.out.println("Enter the type of genre for this book \n");
+        String genre = input.next();
+
+        librarian.addBook(name, author, genre, vpl);
+        System.out.println("This book has been added to the list of books successfully!");
     }
 
 }

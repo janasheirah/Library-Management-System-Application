@@ -13,7 +13,7 @@ public class User {
     // EFFECTS: constructs a user with a name and an empty checkout cart
 
     /**
-     * This is constructor of the user class
+     * This is the constructor of the user class
      *
      * @param name the username
      */
@@ -33,7 +33,6 @@ public class User {
         return checkOutCart;
     }
 
-    // modifies?
     // EFFECTS: returns the titles of the books in the checkout cart
     public List<String> getCheckOutCartByTitle() {
         List<String> listOfTitles = new LinkedList<>();
@@ -44,8 +43,8 @@ public class User {
         return listOfTitles;
     }
 
-    // REQUIRES: bk != null
-    // MODIFIES: this
+    // REQUIRES: bk != null, bk is in listOfBooks
+    // MODIFIES: this, Book
     // EFFECTS: returns true if the book is available to borrow, adds book to user's cart and sets the loan status to
     // true, returns false otherwise
     public boolean checkOutBook(Library lib, Book bk) {
@@ -58,7 +57,7 @@ public class User {
     }
 
     // REQUIRES: bk != null
-    // MODIFIES: this
+    // MODIFIES: this, Book
     // EFFECTS: returns true if the book was on loan and sets its loan status to false
     // otherwise, returns false
     public boolean returnBook(Book bk) {

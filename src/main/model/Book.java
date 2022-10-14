@@ -34,7 +34,7 @@ public class Book {
         return genre;
     }
 
-    // EFFECTS: returns the value isOnLoan (whether book is on loan)
+    // EFFECTS: returns whether the book is on loan
     public boolean onLoan() {
         return isOnLoan;
     }
@@ -46,7 +46,7 @@ public class Book {
         isOnLoan = b;
     }
 
-    // REQUIRES: book != null
+    // REQUIRES: book, library != null
     // EFFECTS: returns true if the book is in stock and available to borrow
     public boolean availableToBorrow(Library library, Book book) {
         return library.inStock(book) && !book.onLoan();

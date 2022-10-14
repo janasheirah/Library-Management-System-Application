@@ -42,7 +42,6 @@ public class Library {
         return listOfBooks;
     }
 
-    // MODIFIES: this
     // EFFECTS: returns the list of book titles available in the library
     public List<String> getListOfTitles() {
         List<String> listOfTitles = new LinkedList<>();
@@ -53,7 +52,7 @@ public class Library {
         return listOfTitles;
     }
 
-    // EFFECTS returns the book object from searchForBook method
+    // EFFECTS: returns the book object from searchForBook method
     public Book getBookVariable() {
         return bookVariable;
     }
@@ -82,18 +81,10 @@ public class Library {
         return null;
     }
 
-
     // REQUIRES: book != null
     // EFFECTS: returns true if given book is in list of books in library
     public boolean inStock(Book book) {
         return listOfBooks.contains(book);
-    }
-
-    // MODIFIES: this, listOfBooks ?
-    // EFFECTS: adds a new book to library list of books
-    public void addBook(String bookName, String author, String genre) {
-        Book book = new Book(bookName, author, genre);
-        listOfBooks.add(book);
     }
 
 }

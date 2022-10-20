@@ -11,12 +11,6 @@ public class User {
     private String name;
 
     // EFFECTS: constructs a user with a name and an empty checkout cart
-
-    /**
-     * This is the constructor of the user class
-     *
-     * @param name the username
-     */
     public User(String name) {
         this.name = name;
         checkOutCart = new ArrayList<>();

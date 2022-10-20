@@ -59,6 +59,7 @@ public class Library {
 
     // REQUIRES: genre is one of: Fantasy, Non Fiction, Romance, Mystery, Biography
     // EFFECTS: returns books available according to genre searched for by user
+    // account for books added by use with other genres
     public List<String> searchForBook(String genre) {
         ArrayList<String> booksByGenre = new ArrayList<>();
         for (Book book : listOfBooks) {

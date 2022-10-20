@@ -5,7 +5,8 @@ public class Book {
 
     private String bookName; // title of the book
     private String author;
-    private String genre; // types: fantasy, non fiction, romance, mystery, biography
+    private String genre;
+    // types: fantasy, non fiction, romance, mystery, biography
     private boolean isOnLoan;
 
     // MODIFIES: this

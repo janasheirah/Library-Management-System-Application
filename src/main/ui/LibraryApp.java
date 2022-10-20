@@ -107,11 +107,10 @@ public class LibraryApp {
         System.out.print("Enter one of the following genre: Fantasy, Non Fiction, Romance, Mystery, Biography\n");
         String genre = input.next();
 
-        if (genre.equals("Fantasy") || genre.equals("Non Fiction") || genre.equals("Romance") || genre.equals("Mystery")
-                || genre.equals("Biography")) {
-            System.out.println("These are the available books for " + genre + ": " + vpl.searchForBook(genre));
+        if (vpl.searchForBook(genre).isEmpty()) {
+            System.out.println("Sorry, there are no books available for this genre\n");
         } else {
-            System.out.println("This genre is not available in this library\n");
+            System.out.println("These are the available books for " + genre + ": " + vpl.searchForBook(genre));
         }
     }
 

@@ -5,7 +5,11 @@ import model.Book;
 import model.Librarian;
 import model.Library;
 import model.User;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,16 +17,20 @@ import java.util.Scanner;
 // Library application
 public class LibraryApp {
 
+    private static final String JSON_STORE = "./data/checkoutCart.json";
     private User user1;
     private Librarian librarian;
     private Scanner input;
+    private JsonWriter jsonWriter;
+    private JsonReader jsonReader;
     Library vpl = new Library("Vancouver Public Library");
 
     // EFFECTS: runs the library application
     // citation: TellerApp() from CPSC 210 repo
-    public LibraryApp() {
+    public LibraryApp() throws FileNotFoundException {
         System.out.println("Hello, Welcome to the Vancouver Public Library!");
-        // runMenu();
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
         runLibraryUser();
     }
 
@@ -64,6 +72,10 @@ public class LibraryApp {
             doReturn();
         } else if (command.equals("a")) {
             doAdd();
+        } else if (command.equals("save")) {
+            saveCheckoutCart();
+        } else if (command.equals("load")) {
+            loadCheckoutCart();
         } else {
             System.out.println("Selection not valid...");
         }
@@ -72,8 +84,8 @@ public class LibraryApp {
     // MODIFIES: this
     // EFFECTS: initializes accounts
     private void init() {
-        user1 = new User("Joe");
-        librarian = new Librarian("Jan Doe");
+        user1 = new User("Joe's Checkout Cart");
+        librarian = new Librarian("Librarian1");
         input = new Scanner(System.in);
         input.useDelimiter("\n");
     }
@@ -87,6 +99,8 @@ public class LibraryApp {
         System.out.println("\tv -> view books in cart");
         System.out.println("\tr -> return book");
         System.out.println("\ta -> add book to list of books");
+        System.out.println("\tsave -> save checkout cart to file");
+        System.out.println("\tload -> load checkout cart from file");
         System.out.println("\tq -> quit");
     }
 
@@ -175,6 +189,29 @@ public class LibraryApp {
 
         librarian.addBook(name, author, genre, vpl);
         System.out.println("This book has been added to the list of books successfully!");
+    }
+
+    // EFFECTS: saves the checkout cart to file
+    private void saveCheckoutCart() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(user1);
+            jsonWriter.close();
+            System.out.println("Saved " + user1.getName() + " to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads user's checkout cart from file
+    private void loadCheckoutCart() {
+        try {
+            user1 = jsonReader.read();
+            System.out.println("Loaded " + user1.getName() + " from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
     }
 
 }

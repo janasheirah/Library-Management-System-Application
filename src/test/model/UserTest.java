@@ -80,6 +80,5 @@ public class UserTest {
         assertEquals("Harry Potter", user1.getCheckOutCartByTitle().get(0));
     }
 
-
 }
 

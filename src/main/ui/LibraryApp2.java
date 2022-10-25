@@ -68,6 +68,9 @@
 //
 //            if (command.equals("q")) {
 //                keepGoing = false;
+//            } else if (command.equals("m")) {
+//                processLibrarianCommand(command);
+//                keepGoing = false;
 //            } else {
 //                processLibrarianCommand(command);
 //            }
@@ -75,14 +78,6 @@
 //
 //        System.out.println("\nGoodbye! Thank you for visiting our library.");
 //    }
-////        input = this.input.next();
-////        input = input.toLowerCase();
-////
-////        if (input.equals("a")) {
-////            doAdd();
-////        } else if (input.equals("m")) {
-////            mainMenu();
-////        }
 //
 //    // MODIFIES: this
 //    // EFFECTS: processes user command
@@ -97,7 +92,7 @@
 //    }
 //
 //    private void mainMenu() {
-//        displayFirstMenu();
+//        runMenu();
 //    }
 //
 //
@@ -137,8 +132,8 @@
 //            doView();
 //        } else if (command.equals("r")) {
 //            doReturn();
-//        } else if (command.equals("a")) {
-//            doAdd();
+//        } else if (command.equals("m")) {
+//            mainMenu();
 //        } else {
 //            System.out.println("Selection not valid...");
 //        }
@@ -161,7 +156,7 @@
 //        System.out.println("\tc -> checkout book by searching book title");
 //        System.out.println("\tv -> view books in cart");
 //        System.out.println("\tr -> return book");
-//        System.out.println("\ta -> add book to list of books");
+//        System.out.println("\tm -> return to main menu");
 //        System.out.println("\tq -> quit");
 //    }
 //
@@ -182,11 +177,10 @@
 //        System.out.print("Enter one of the following genre: Fantasy, Non Fiction, Romance, Mystery, Biography\n");
 //        String genre = input.next();
 //
-//        if (genre.equals("Fantasy") || genre.equals("Non Fiction") || genre.equals("Romance") || genre.equals("Mystery")
-//                || genre.equals("Biography")) {
-//            System.out.println("These are the available books for " + genre + ": " + vpl.searchForBook(genre));
+//        if (vpl.searchForBook(genre).isEmpty()) {
+//            System.out.println("Sorry, there are no books available for this genre\n");
 //        } else {
-//            System.out.println("This genre is not available in this library\n");
+//            System.out.println("These are the available books for " + genre + ": " + vpl.searchForBook(genre));
 //        }
 //    }
 //

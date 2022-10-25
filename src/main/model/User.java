@@ -1,11 +1,15 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 // Represents a user account
-public class User {
+public class User implements Writable {
 
     private List<Book> checkOutCart;
     private String name;
@@ -27,6 +31,12 @@ public class User {
         return checkOutCart;
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds book to this user's checkout chart
+    public void addBookToCart(Book bk) {
+        checkOutCart.add(bk);
+    }
+
     // EFFECTS: returns the titles of the books in the checkout cart
     public List<String> getCheckOutCartByTitle() {
         List<String> listOfTitles = new LinkedList<>();
@@ -44,7 +54,8 @@ public class User {
     public boolean checkOutBook(Library lib, Book bk) {
         if (bk.availableToBorrow(lib, bk)) {
             bk.setLoanStatus(true);
-            checkOutCart.add(bk);
+            addBookToCart(bk);
+            // checkOutCart.add(bk);
             return true;
         }
         return false;
@@ -62,6 +73,25 @@ public class User {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("books", booksToJson());
+        return json;
+    }
+
+    // EFFECTS: returns books in user's checkout cart as a JSON array
+    private JSONArray booksToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Book b : checkOutCart) {
+            jsonArray.put(b.toJson());
+        }
+
+        return jsonArray;
     }
 
 }

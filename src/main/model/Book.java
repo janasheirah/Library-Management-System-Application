@@ -1,7 +1,10 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 // Represents a book having a name, author, genre and if it is on loan
-public class Book {
+public class Book implements Writable {
 
     private String bookName; // title of the book
     private String author;
@@ -53,4 +56,12 @@ public class Book {
         return library.inStock(book) && !book.onLoan();
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", bookName);
+        json.put("author", author);
+        json.put("genre", genre);
+        return json;
+    }
 }

@@ -23,7 +23,5 @@ Moreover, it makes the whole process of getting the books more accessible and av
 -	As a user, I want to be able to view the list of books in my cart.
 -	As a user, I want to be able to return a book. 
 -	As a user, I want to be able to search for books by genre.
--   As a user, I want to be able to save my books in my cart.
--   As a user, when I select quit from application menu, I want to be reminded to save my book lists cart to file,
-and have the option to do so or not. 
+-   As a user, I want to be able to save my books in my checkout cart.
 -   As a user, I want to be able to be given the option to load my book cart from file. 

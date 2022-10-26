@@ -84,7 +84,7 @@ public class LibraryApp {
     // MODIFIES: this
     // EFFECTS: initializes accounts
     private void init() {
-        user1 = new User("Joe's Checkout Cart");
+        user1 = new User("User's Checkout Cart");
         librarian = new Librarian("Librarian1");
         input = new Scanner(System.in);
         input.useDelimiter("\n");

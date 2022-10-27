@@ -7,13 +7,14 @@ import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 import model.Book;
+import model.Library;
 import model.User;
 import org.json.*;
 
 // Represents a reader that reads user information from JSON data stored in file
 // citation: Methods were taken from JsonSerializationDemo from CPSC210
 public class JsonReader {
-    private String source;
+    private final String source;
 
     // EFFECTS: constructs reader to read from source file
     public JsonReader(String source) {
@@ -27,6 +28,7 @@ public class JsonReader {
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseUser(jsonObject);
     }
+
 
     // EFFECTS: reads source file as string and returns it
     private String readFile(String source) throws IOException {
@@ -65,5 +67,54 @@ public class JsonReader {
         String genre = jsonObject.getString("genre");
         Book book = new Book(name, author, genre);
         user.addBookToCart(book);
+    }
+
+    // persistence for new books added by librarian/user
+
+    // EFFECTS: reads library's list of new books from file and returns it;
+    // throws IOException if an error occurs reading data from file
+    public Library readAddBook() throws IOException {
+        String jsonData = readFileAddBook(source);
+        JSONObject jsonObject = new JSONObject(jsonData);
+        return parseLibrary(jsonObject);
+    }
+
+    // EFFECTS: reads source file as string and returns it
+    private String readFileAddBook(String source) throws IOException {
+        StringBuilder contentBuilder = new StringBuilder();
+
+        try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
+            stream.forEach(s -> contentBuilder.append(s));
+        }
+
+        return contentBuilder.toString();
+    }
+
+    // EFFECTS: parses list of books added by user from JSON object and returns it
+    private Library parseLibrary(JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
+        Library lib = new Library(name);
+        addNewBooks(lib, jsonObject);
+        return lib;
+    }
+
+    // MODIFIES: lib
+    // EFFECTS: parses list of books from JSON object and adds them to list of new books
+    private void addNewBooks(Library lib, JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("new books");
+        for (Object json : jsonArray) {
+            JSONObject nextBook = (JSONObject) json;
+            addNewBook(lib, nextBook);
+        }
+    }
+
+    // MODIFIES: lib
+    // EFFECTS: parses book from JSON object and adds it to list of new books added
+    private void addNewBook(Library lib, JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
+        String author = jsonObject.getString("author");
+        String genre = jsonObject.getString("genre");
+        Book book = new Book(name, author, genre);
+        lib.addBook(book);
     }
 }

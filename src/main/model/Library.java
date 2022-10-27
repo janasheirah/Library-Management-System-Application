@@ -1,19 +1,26 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 // Represents library with list of books available
-public class Library {
+public class Library implements Writable {
 
     private List<Book> listOfBooks;
     private String name;
     private Book bookVariable;
+    private List<Book> booksAddedByLibrarian;
+    private Book bookAddedByUser;
 
     // EFFECTS: constructs a library with a name and a list of books
     public Library(String name) {
         this.name = name;
+        booksAddedByLibrarian = new ArrayList<>();
         listOfBooks = new ArrayList<>();
         Book hungerGames = new Book("The Hunger Games", "Suzanne Collins", "Fantasy");
         Book harryPotter = new Book("Harry Potter", "J.K. Rowling", "Fantasy");
@@ -35,6 +42,14 @@ public class Library {
         Book beautifulMind = new Book("A Beautiful Mind", "Sylvia Nasar", "Biography");
         listOfBooks.add(steveJobs);
         listOfBooks.add(beautifulMind);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Book> getListOfNewBooks() {
+        return booksAddedByLibrarian;
     }
 
     // EFFECTS: returns the list of books
@@ -86,6 +101,38 @@ public class Library {
     // EFFECTS: returns true if given book is in list of books in library
     public boolean inStock(Book book) {
         return listOfBooks.contains(book);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds a new book to library's list of books
+    public void addBookByLibrarian(String bookName, String author, String genre) {
+        Book book = new Book(bookName, author, genre);
+        bookAddedByUser = book;
+        addBook(book);
+    }
+
+    public void addBook(Book book) {
+        booksAddedByLibrarian.add(book);
+        listOfBooks.add(book);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("new books", booksAddedToJson());
+        return json;
+    }
+
+    // EFFECTS: returns books in user's checkout cart as a JSON array
+    private JSONArray booksAddedToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Book b : booksAddedByLibrarian) {
+            jsonArray.put(b.toJson());
+        }
+
+        return jsonArray;
     }
 
 }

@@ -18,11 +18,14 @@ import java.util.Scanner;
 public class LibraryApp {
 
     private static final String JSON_STORE = "./data/checkoutCart.json";
+    private static final String JSON_STORE2 = "./data/newBooks.json";
     private User user1;
     private Librarian librarian;
     private Scanner input;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
+    private JsonWriter jsonWriter2;
+    private JsonReader jsonReader2;
     Library vpl = new Library("Vancouver Public Library");
 
     // EFFECTS: runs the library application
@@ -31,6 +34,8 @@ public class LibraryApp {
         System.out.println("Hello, Welcome to the Vancouver Public Library!");
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
+        jsonWriter2 = new JsonWriter(JSON_STORE2);
+        jsonReader2 = new JsonReader(JSON_STORE2);
         runLibraryUser();
     }
 
@@ -99,8 +104,8 @@ public class LibraryApp {
         System.out.println("\tv -> view books in cart");
         System.out.println("\tr -> return book");
         System.out.println("\ta -> add book to list of books");
-        System.out.println("\tsave -> save checkout cart to file");
-        System.out.println("\tload -> load checkout cart from file");
+        System.out.println("\tsave -> save user changes to file");
+        System.out.println("\tload -> load user history from file");
         System.out.println("\tq -> quit");
     }
 
@@ -187,28 +192,35 @@ public class LibraryApp {
         System.out.println("Enter the type of genre for this book \n");
         String genre = input.next();
 
-        librarian.addBook(name, author, genre, vpl);
+        // librarian.addBook(name, author, genre, vpl);
+        vpl.addBookByLibrarian(name, author, genre);
         System.out.println("This book has been added to the list of books successfully!");
     }
 
-    // EFFECTS: saves the checkout cart to file
+    // EFFECTS: saves the checkout cart and new books added to file
     private void saveCheckoutCart() {
         try {
             jsonWriter.open();
+            jsonWriter2.open();
             jsonWriter.write(user1);
+            jsonWriter2.writeAddBook(vpl);
             jsonWriter.close();
+            jsonWriter2.close();
             System.out.println("Saved " + user1.getName() + " to " + JSON_STORE);
+            System.out.println("Saved list of books in " + vpl.getName() + " to " + JSON_STORE2);
         } catch (FileNotFoundException e) {
             System.out.println("Unable to write to file: " + JSON_STORE);
         }
     }
 
     // MODIFIES: this
-    // EFFECTS: loads user's checkout cart from file
+    // EFFECTS: loads user's checkout cart and new books added from file
     private void loadCheckoutCart() {
         try {
             user1 = jsonReader.read();
+            vpl = jsonReader2.readAddBook();
             System.out.println("Loaded " + user1.getName() + " from " + JSON_STORE);
+            System.out.println("Loaded list of books in " + vpl.getName() + " from " + JSON_STORE2);
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }

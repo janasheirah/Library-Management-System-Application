@@ -1,6 +1,7 @@
 package persistence;
 
 import model.Book;
+import model.Library;
 import model.User;
 import org.junit.jupiter.api.Test;
 
@@ -35,12 +36,39 @@ class JsonReaderTest extends JsonTest {
     }
 
     @Test
+    void testReaderEmptyNewBooks() {
+        JsonReader reader = new JsonReader("./data/testReaderEmptyNewBooks.json");
+        try {
+            Library lib = reader.readAddBook();
+            assertEquals("IKB", lib.getName());
+            assertEquals(0, lib.getListOfNewBooks().size());
+        } catch (IOException e) {
+            fail("Couldn't read from file");
+        }
+    }
+
+    @Test
     void testReaderGeneralCart() {
         JsonReader reader = new JsonReader("./data/testReaderGeneralCart.json");
         try {
             User user = reader.read();
             assertEquals("Jane Doe's Cart", user.getName());
             List<Book> books = user.getCheckOutCart();
+            assertEquals(2, books.size());
+            checkBook("Harry Potter", "J.K. Rowling", "Fantasy", books.get(0));
+            checkBook("It Ends With Us", "Colleen Hoover", "Romance", books.get(1));
+        } catch (IOException e) {
+            fail("Couldn't read from file");
+        }
+    }
+
+    @Test
+    void testReaderGeneralNewBooks() {
+        JsonReader reader = new JsonReader("./data/testReaderGeneralNewBooks.json");
+        try {
+            Library lib = reader.readAddBook();
+            assertEquals("IKB", lib.getName());
+            List<Book> books = lib.getListOfNewBooks();
             assertEquals(2, books.size());
             checkBook("Harry Potter", "J.K. Rowling", "Fantasy", books.get(0));
             checkBook("It Ends With Us", "Colleen Hoover", "Romance", books.get(1));

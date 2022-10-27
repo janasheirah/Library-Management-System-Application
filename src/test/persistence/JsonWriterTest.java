@@ -1,6 +1,7 @@
 package persistence;
 
 import model.Book;
+import model.Library;
 import model.User;
 import org.junit.jupiter.api.Test;
 
@@ -45,6 +46,24 @@ class JsonWriterTest extends JsonTest {
     }
 
     @Test
+    void testWriterEmptyNewBooks() {
+        try {
+            Library lib = new Library("IKB");
+            JsonWriter writer = new JsonWriter("./data/testWriterEmptyNewBooks.json");
+            writer.open();
+            writer.writeAddBook(lib);
+            writer.close();
+
+            JsonReader reader = new JsonReader("./data/testWriterEmptyNewBooks.json");
+            lib = reader.readAddBook();
+            assertEquals("IKB", lib.getName());
+            assertEquals(0, lib.getListOfNewBooks().size());
+        } catch (IOException e) {
+            fail("Exception should not have been thrown");
+        }
+    }
+
+    @Test
     void testWriterGeneralCart() {
         try {
             User user = new User("Jane Doe's Cart");
@@ -59,6 +78,30 @@ class JsonWriterTest extends JsonTest {
             user = reader.read();
             assertEquals("Jane Doe's Cart", user.getName());
             List<Book> books = user.getCheckOutCart();
+            assertEquals(2, books.size());
+            checkBook("Harry Potter", "J.K. Rowling", "Fantasy", books.get(0));
+            checkBook("It Ends With Us", "Colleen Hoover", "Romance", books.get(1));
+
+        } catch (IOException e) {
+            fail("Exception should not have been thrown");
+        }
+    }
+
+    @Test
+    void testWriterGeneralNewBooks() {
+        try {
+            Library lib = new Library("IKB");
+            lib.addBookByLibrarian("Harry Potter", "J.K. Rowling", "Fantasy");
+            lib.addBookByLibrarian("It Ends With Us", "Colleen Hoover", "Romance");
+            JsonWriter writer = new JsonWriter("./data/testWriterGeneralNewBooks.json");
+            writer.open();
+            writer.writeAddBook(lib);
+            writer.close();
+
+            JsonReader reader = new JsonReader("./data/testWriterGeneralNewBooks.json");
+            lib = reader.readAddBook();
+            assertEquals("IKB", lib.getName());
+            List<Book> books = lib.getListOfNewBooks();
             assertEquals(2, books.size());
             checkBook("Harry Potter", "J.K. Rowling", "Fantasy", books.get(0));
             checkBook("It Ends With Us", "Colleen Hoover", "Romance", books.get(1));

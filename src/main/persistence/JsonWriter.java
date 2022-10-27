@@ -1,5 +1,6 @@
 package persistence;
 
+import model.Library;
 import model.User;
 import org.json.JSONObject;
 
@@ -29,6 +30,13 @@ public class JsonWriter {
     // EFFECTS: writes JSON representation of user's checkout cart to file
     public void write(User user) {
         JSONObject json = user.toJson();
+        saveToFile(json.toString(TAB));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: writes JSON representation of books added by librarian
+    public void writeAddBook(Library lib) {
+        JSONObject json = lib.toJson();
         saveToFile(json.toString(TAB));
     }
 

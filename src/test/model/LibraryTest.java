@@ -57,6 +57,26 @@ public class LibraryTest {
         assertEquals(11, testLibrary.getListOfTitles().size());
         assertEquals("The Book Thief", testLibrary.getListOfTitles().get(10));
     }
+
+
+    @Test
+    public void testAddBook() {
+        testLibrary.addBookByLibrarian("Book Of Proof", "Richard Hammack", "Non Fiction");
+        assertEquals(12, testLibrary.getListOfBooks().size());
+        assertEquals("Book Of Proof", testLibrary.getListOfBooks().get(11).getBookName());
+        assertEquals("Richard Hammack", testLibrary.getListOfBooks().get(11).getAuthor());
+        assertEquals("Non Fiction", testLibrary.getListOfBooks().get(11).getGenre());
+    }
+
+    @Test
+    public void testAddMultipleBooks() {
+        testLibrary.addBookByLibrarian("Book Of Proof", "Ricahrd Hammack", "Non Fiction");
+        testLibrary.addBookByLibrarian("November 9", "Colleen Hoover", "Romance");
+        assertEquals(13, testLibrary.getListOfBooks().size());
+        assertEquals("November 9", testLibrary.getListOfBooks().get(12).getBookName());
+        assertEquals("Colleen Hoover", testLibrary.getListOfBooks().get(12).getAuthor());
+        assertEquals("Romance", testLibrary.getListOfBooks().get(12).getGenre());
+    }
 }
 
 

@@ -55,7 +55,6 @@ public class User implements Writable {
         if (bk.availableToBorrow(lib, bk)) {
             bk.setLoanStatus(true);
             addBookToCart(bk);
-            // checkOutCart.add(bk);
             return true;
         }
         return false;

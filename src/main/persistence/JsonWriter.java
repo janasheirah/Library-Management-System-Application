@@ -34,7 +34,7 @@ public class JsonWriter {
     }
 
     // MODIFIES: this
-    // EFFECTS: writes JSON representation of books added by librarian
+    // EFFECTS: writes JSON representation of books added by user
     public void writeAddBook(Library lib) {
         JSONObject json = lib.toJson();
         saveToFile(json.toString(TAB));

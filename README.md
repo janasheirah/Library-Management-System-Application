@@ -23,5 +23,5 @@ Moreover, it makes the whole process of getting the books more accessible and av
 -	As a user, I want to be able to view the list of books in my cart.
 -	As a user, I want to be able to return a book. 
 -	As a user, I want to be able to search for books by genre.
--   As a user, I want to be able to save my books in my checkout cart.
--   As a user, I want to be able to be given the option to load my book cart from file. 
+-   As a user, I want to be able to save my books in my checkout cart and new books added to library.
+-   As a user, I want to be able to be given the option to load my previous user history (book cart and new books added) from file. 

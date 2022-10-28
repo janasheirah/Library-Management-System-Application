@@ -15,7 +15,6 @@ public class Library implements Writable {
     private String name;
     private Book bookVariable;
     private List<Book> booksAddedByLibrarian;
-    private Book bookAddedByUser;
 
     // EFFECTS: constructs a library with a name and a list of books
     public Library(String name) {
@@ -44,10 +43,12 @@ public class Library implements Writable {
         listOfBooks.add(beautifulMind);
     }
 
+    // EFFECTS: returns name of library
     public String getName() {
         return name;
     }
 
+    // EFFECTS: returns the list of new books added by librarian
     public List<Book> getListOfNewBooks() {
         return booksAddedByLibrarian;
     }
@@ -107,10 +108,11 @@ public class Library implements Writable {
     // EFFECTS: adds a new book to library's list of books
     public void addBookByLibrarian(String bookName, String author, String genre) {
         Book book = new Book(bookName, author, genre);
-        bookAddedByUser = book;
         addBook(book);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds book to library's list of books and to list of new books added
     public void addBook(Book book) {
         booksAddedByLibrarian.add(book);
         listOfBooks.add(book);

@@ -120,7 +120,6 @@ public class LibraryApp {
         }
     }
 
-    // MODIFIES: this
     // EFFECTS: conducts a search by genre of book
     private void doSearch() {
         System.out.print("Enter one of the following genre: Fantasy, Non Fiction, Romance, Mystery, Biography\n");
@@ -134,7 +133,7 @@ public class LibraryApp {
     }
 
     // MODIFIES: this
-    // EFFECTS: conducts a search by book title
+    // EFFECTS: conducts a search by book title and checks out book if it is availble to be checked out
     private void doSearchByName() {
         System.out.print("Enter the title of the book you want to checkout\n");
         String title = input.next();
@@ -183,6 +182,7 @@ public class LibraryApp {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: conducts adding book method
     public void doAdd() {
         System.out.println("Enter the name of the book you want to add \n");
@@ -192,7 +192,6 @@ public class LibraryApp {
         System.out.println("Enter the type of genre for this book \n");
         String genre = input.next();
 
-        // librarian.addBook(name, author, genre, vpl);
         vpl.addBookByLibrarian(name, author, genre);
         System.out.println("This book has been added to the list of books successfully!");
     }

@@ -56,6 +56,10 @@ public class Book implements Writable {
         return library.inStock(book) && !book.onLoan();
     }
 
+    public String toString() {
+        return bookName.toString() + "\n" + author;
+    }
+
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

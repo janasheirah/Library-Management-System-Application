@@ -167,7 +167,11 @@ public class LibraryUI extends JFrame {
             list.setBounds(100, 100, 300, 300);
             list.setFont(new Font("Times New Roman", Font.PLAIN, 17));
             internalFrame.add(new JScrollPane(list));
-            model.addAll(vpl.getListOfBooks());
+//            model.addAll(vpl.getListOfBooks());
+
+            for (Book b : vpl.getListOfBooks()) {
+                model.addElement(b);
+            }
 
             internalFrame.add(list);
             internalFrame.add(label);

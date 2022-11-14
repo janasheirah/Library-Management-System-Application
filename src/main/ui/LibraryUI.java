@@ -153,21 +153,21 @@ public class LibraryUI extends JFrame {
             internalFrame = new JInternalFrame();
             panel.add(internalFrame);
             internalFrame.setBounds(100, 100, 400, 400);
+            backgroundImage = new ImageIcon("./data/listOfBooks.jpg");
+            JLabel label = new JLabel(backgroundImage);
+            internalFrame.add(label);
 
             JList<Book> list = new JList<>();
             DefaultListModel<Book> model = new DefaultListModel<>();
 
-            backgroundImage = new ImageIcon("./data/listOfBooks.jpg");
-            JLabel label = new JLabel(backgroundImage);
-            internalFrame.add(label);
-            List<Book> totalCatalogue = new LinkedList<>();
-            totalCatalogue.addAll(vpl.getListOfBooks());
+//            List<Book> totalCatalogue = new LinkedList<>();
+//            totalCatalogue.addAll(vpl.getListOfBooks());
 
             list.setModel(model);
             list.setBounds(100, 100, 300, 300);
             list.setFont(new Font("Times New Roman", Font.PLAIN, 17));
             internalFrame.add(new JScrollPane(list));
-            model.addAll(totalCatalogue);
+            model.addAll(vpl.getListOfBooks());
 
             internalFrame.add(list);
             internalFrame.add(label);

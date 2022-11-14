@@ -57,7 +57,7 @@ public class Book implements Writable {
     }
 
     public String toString() {
-        return bookName.toString() + "\n" + author;
+        return bookName + " by " + author;
     }
 
     @Override

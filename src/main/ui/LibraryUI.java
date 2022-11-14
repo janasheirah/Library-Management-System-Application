@@ -7,10 +7,13 @@ import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import javax.swing.*;
-import javax.swing.text.View;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -20,9 +23,11 @@ public class LibraryUI extends JFrame {
 
     private static final String JSON_STORE = "./data/checkoutCart.json";
     private static final String JSON_STORE2 = "./data/newBooks.json";
+    private JDesktopPane desktop;
+    private JPanel panel;
+    private JInternalFrame internalFrame;
     private JFrame frame;
     private ImageIcon backgroundImage;
-    private JTextArea listArea;
     private JButton button1;
     private JButton button2;
     private JButton button3;
@@ -30,14 +35,12 @@ public class LibraryUI extends JFrame {
     private JButton button5;
     private JButton button6;
     private JButton button7;
-    private JButton button8;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
     private JsonWriter jsonWriter2;
     private JsonReader jsonReader2;
     private Library vpl;
     private User user1;
-    private JDesktopPane desktop;
 
     public LibraryUI() {
 
@@ -48,23 +51,26 @@ public class LibraryUI extends JFrame {
         jsonWriter2 = new JsonWriter(JSON_STORE2);
         jsonReader2 = new JsonReader(JSON_STORE2);
 
+        SplashScreen splashScreen = new SplashScreen();
+
         backgroundImage = new ImageIcon("./data/backgroundImage.jpg");
         JLabel myLabel = new JLabel(backgroundImage);
         myLabel.setBounds(0,0,600,600);
 
+        // desktop = new JDesktopPane();
         frame = new JFrame("Library Management System");
         frame.add(myLabel);
 
         addLabel();
         addButtonPanel();
+        saveOnClose();
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setResizable(false);
-        frame.setBounds(200, 200, 600, 600);
+        frame.setBounds(0, 0, 600, 600);
 
         frame.getContentPane().setBackground(new Color(204, 204, 255));
         frame.setVisible(true);
-
     }
 
     private void addLabel() {
@@ -77,27 +83,61 @@ public class LibraryUI extends JFrame {
 
     private void addButtonPanel() {
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(8,1));
+        buttonPanel.setLayout(new GridLayout(7,1));
 //        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         button1 = new JButton(new ViewBooksAction());
         button2 = new JButton(new CheckoutBookAction());
         button3 = new JButton(new ReturnBookAction());
         button4 = new JButton(new SearchByGenreAction());
         button5 = new JButton(new ViewUserCartAction());
-        button6 = new JButton(new SaveHistoryAction());
-        button7 = new JButton(new LoadDataAction());
-        button8 = new JButton(new AddBookAction());
+        button6 = new JButton(new LoadDataAction());
+        button7 = new JButton(new AddBookAction());
         buttonPanel.add(button1);
         buttonPanel.add(button4);
         buttonPanel.add(button2);
         buttonPanel.add(button5);
         buttonPanel.add(button3);
-        buttonPanel.add(button8);
-        buttonPanel.add(button6);
         buttonPanel.add(button7);
+        buttonPanel.add(button6);
         buttonPanel.setBounds(100,100,40,40);
         buttonPanel.setMaximumSize(new Dimension(40,40));
         frame.getContentPane().add(buttonPanel, BorderLayout.WEST);
+    }
+
+    private void saveOperations() throws FileNotFoundException {
+        jsonWriter.open();
+        jsonWriter2.open();
+        jsonWriter.write(user1);
+        jsonWriter2.writeAddBook(vpl);
+        jsonWriter.close();
+        jsonWriter2.close();
+    }
+
+    private void saveOnClose() {
+        frame.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent we) {
+                int result = JOptionPane.showConfirmDialog(frame, "Do you want to save your current data?",
+                        "Save data", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (result == JOptionPane.YES_OPTION) {
+                    try {
+                        saveOperations();
+                        JOptionPane.showMessageDialog(frame,
+                                "Saved " + user1.getName() + "'s data to \n" + JSON_STORE + "\n" + JSON_STORE2,
+                                "Saved Data", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (FileNotFoundException exc) {
+                        JOptionPane.showMessageDialog(frame,
+                                "Unable to write to file: " + JSON_STORE, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                    System.exit(0);
+                } else {
+                    JOptionPane.showMessageDialog(frame,"Your data will not be saved", "Warning",
+                            JOptionPane.ERROR_MESSAGE);
+                    System.exit(0);
+                }
+            }
+        });
     }
 
     private class ViewBooksAction extends AbstractAction {
@@ -111,13 +151,34 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            List<String> totalCatalogue = new LinkedList<>();
-            totalCatalogue.addAll(vpl.getListOfTitles());
 
-            JOptionPane.showMessageDialog(null,
-                    "Here is the Catalogue: " + "\n" + vpl.getListOfTitles(),
-                    "Book Catalogue",
-                    JOptionPane.INFORMATION_MESSAGE);
+            panel = new JPanel();
+            internalFrame = new JInternalFrame();
+            panel.add(internalFrame);
+            internalFrame.setBounds(100, 100, 400, 400);
+
+            JList<Book> list = new JList<>();
+            DefaultListModel<Book> model = new DefaultListModel<>();
+
+            backgroundImage = new ImageIcon("./data/listOfBooks.jpg");
+            JLabel label = new JLabel(backgroundImage);
+            internalFrame.add(label);
+            List<Book> totalCatalogue = new LinkedList<>();
+            totalCatalogue.addAll(vpl.getListOfBooks());
+
+            list.setModel(model);
+            list.setBounds(100, 100, 300, 300);
+            list.setFont(new Font("Times New Roman", Font.PLAIN, 17));
+            internalFrame.add(new JScrollPane(list));
+            model.addAll(totalCatalogue);
+
+            internalFrame.add(list);
+            internalFrame.add(label);
+            internalFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            panel.add(internalFrame);
+            frame.add(panel);
+            internalFrame.setVisible(true);
+            panel.setVisible(true);
         }
     }
 
@@ -129,23 +190,25 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String bookName = JOptionPane.showInputDialog(null,
+            internalFrame.dispose();
+            panel.setVisible(false);
+            String bookName = JOptionPane.showInputDialog(frame,
                     "Enter the name of the book you want to checkout",
                     "Book Name?",
                     JOptionPane.QUESTION_MESSAGE);
             if (vpl.getListOfTitles().contains(bookName)) {
                 vpl.searchForBookByTitle(bookName);
                 if (user1.checkOutBook(vpl, vpl.getBookVariable())) {
-                    JOptionPane.showMessageDialog(null, "This book is now checked out: "
+                    JOptionPane.showMessageDialog(frame, "This book is now checked out: "
                                     + vpl.getBookVariable().getBookName() + " by " + vpl.getBookVariable().getAuthor(),
                             "Checkout",
                             JOptionPane.INFORMATION_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(null,
+                    JOptionPane.showMessageDialog(frame,
                             bookName + " book is currently on loan and cannot be checked out. ");
                 }
             } else {
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(frame,
                         bookName + " book is not available in this library.",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -161,29 +224,29 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String bookName = JOptionPane.showInputDialog(null,
+            internalFrame.dispose();
+            panel.setVisible(false);
+            String bookName = JOptionPane.showInputDialog(frame,
                     "Enter the name of the book you want to return",
-                    "Book Name?",
-                    JOptionPane.QUESTION_MESSAGE);
+                    "Book Name?", JOptionPane.QUESTION_MESSAGE);
 
             if (vpl.getListOfTitles().contains(bookName)) {
                 if (user1.getCheckOutCartByTitle().contains(bookName)) {
                     vpl.searchForBookByTitle(bookName);
                     if (user1.returnBook(vpl.getBookVariable())) {
-                        JOptionPane.showMessageDialog(null, "This book is now returned: "
-                                        + vpl.getBookVariable().getBookName() + " by " + vpl.getBookVariable().getAuthor(),
-                                "Return",
-                                JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(frame, "This book is now returned: "
+                                        + vpl.getBookVariable().getBookName() + " by "
+                                        + vpl.getBookVariable().getAuthor(),
+                                "Return", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null,
-                            bookName + " book was not on loan so not valid to be returned. \n. ");
+                    JOptionPane.showMessageDialog(frame,
+                            bookName + " book was not on loan so not valid to be returned. \n");
                 }
             } else {
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(frame,
                         bookName + " book is not available in this library.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -196,17 +259,22 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String genre = JOptionPane.showInputDialog(null,
+            internalFrame.dispose();
+            panel.setVisible(false);
+            String genre = JOptionPane.showInputDialog(frame,
                     "Enter one of the following genre: Fantasy, Non Fiction, Romance, Mystery, Biography\n",
                     "Genre?",
                     JOptionPane.QUESTION_MESSAGE);
 
             if (vpl.searchForBook(genre).isEmpty()) {
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(frame,
                          " Sorry, there are no books available for this genre\n");
             } else {
-                JOptionPane.showMessageDialog(null,
-                        "These are the available books for " + genre + "\n " + vpl.searchForBook(genre));
+                ImageIcon image = new ImageIcon("./data/icon.jpg");
+                JOptionPane.showMessageDialog(frame,
+                        "These are the available books for " + genre + "\n " + vpl.searchForBook(genre),
+                        "Filtered Books", JOptionPane.INFORMATION_MESSAGE,
+                        image);
             }
         }
     }
@@ -219,38 +287,12 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(null,
+            internalFrame.dispose();
+            panel.setVisible(false);
+            JOptionPane.showMessageDialog(frame,
                     "Here is your checkout cart: \n " + user1.getCheckOutCartByTitle(),
                     "Checkout Cart",
                     JOptionPane.INFORMATION_MESSAGE);
-        }
-    }
-
-    private class SaveHistoryAction extends AbstractAction {
-
-        SaveHistoryAction() {
-            super("Save");
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                jsonWriter.open();
-                jsonWriter2.open();
-                jsonWriter.write(user1);
-                jsonWriter2.writeAddBook(vpl);
-                jsonWriter.close();
-                jsonWriter2.close();
-                JOptionPane.showMessageDialog(null,
-                        "Saved " + user1.getName() + "'s data to \n" + JSON_STORE + "\n" + JSON_STORE2,
-                        "Saved Data",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } catch (FileNotFoundException exc) {
-                JOptionPane.showMessageDialog(null,
-                        "Unable to write to file: " + JSON_STORE,
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }
         }
     }
 
@@ -263,14 +305,16 @@ public class LibraryUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
+                internalFrame.dispose();
+                panel.setVisible(false);
                 user1 = jsonReader.read();
                 vpl = jsonReader2.readAddBook();
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(frame,
                         "Loaded " + user1.getName() + "'s history from \n" + JSON_STORE + "\n" + JSON_STORE2,
                         "Load History",
                         JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException exc) {
-                JOptionPane.showMessageDialog(null,
+                JOptionPane.showMessageDialog(frame,
                         "Unable to read from file:  " + JSON_STORE,
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
@@ -286,52 +330,28 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            String name = JOptionPane.showInputDialog(null,
+            internalFrame.dispose();
+            panel.setVisible(false);
+            String name = JOptionPane.showInputDialog(frame,
                     "Enter the name of the book you want to add \n",
                     "Book Name?",
                     JOptionPane.QUESTION_MESSAGE);
-            String author = JOptionPane.showInputDialog(null,
+            String author = JOptionPane.showInputDialog(frame,
                     "Enter the name of the author of the book \n",
                     "Author Name?",
                     JOptionPane.QUESTION_MESSAGE);
-            String genre = JOptionPane.showInputDialog(null,
+            String genre = JOptionPane.showInputDialog(frame,
                     "Enter the type of genre for this book \n",
                     "Genre?",
                     JOptionPane.QUESTION_MESSAGE);
 
             vpl.addBookByLibrarian(name, author, genre);
-            JOptionPane.showMessageDialog(null,
+            JOptionPane.showMessageDialog(frame,
                     "This book has been added to the list of books successfully!",
                     "Successful transaction",
-                    JOptionPane.OK_OPTION);
+                    JOptionPane.INFORMATION_MESSAGE);
         }
     }
 }
-
-//
-//            JTextField fname = new JTextField();
-//            JTextField fgenre = new JTextField();
-//            JTextField fauthor = new JTextField();
-//
-//            JButton create = new JButton("Submit");
-//            create.addActionListener(e1 -> {
-//                String bName = fname.getText();
-//                String genre = fgenre.getText();
-//                String author = fauthor.getText();
-//                        Library vpl;
-//                        vpl.addBook(fname.getText(), fauthor.getText(),fgenre.getText());
-//                jOptionPane.showMessageDialog(null, "Book added!");
-//            });
-//            g.add(l3);
-//            g.add(create);
-//            g.add(l1);
-//            g.add(l2);
-//            g.add(fname);
-//            g.add(fgenre);
-//            g.add(fauthor);
-//            g.setVisible(true);
-//            frame.add(g);
-//        });
-//    }
 
 

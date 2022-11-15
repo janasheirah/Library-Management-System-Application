@@ -13,17 +13,18 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
+/**
+ * Represents application's main window frame.
+ */
 public class LibraryUI extends JFrame {
 
     private static final String JSON_STORE = "./data/checkoutCart.json";
     private static final String JSON_STORE2 = "./data/newBooks.json";
-    private JDesktopPane desktop;
     private JPanel panel;
     private JInternalFrame internalFrame;
     private JFrame frame;
+    private JLabel myLabel;
     private ImageIcon backgroundImage;
     private JButton button1;
     private JButton button2;
@@ -39,6 +40,9 @@ public class LibraryUI extends JFrame {
     private Library vpl;
     private User user1;
 
+    /**
+     * Constructor sets up frame, adds button panel and adds background image.
+     */
     public LibraryUI() {
 
         vpl = new Library("library");
@@ -48,13 +52,12 @@ public class LibraryUI extends JFrame {
         jsonWriter2 = new JsonWriter(JSON_STORE2);
         jsonReader2 = new JsonReader(JSON_STORE2);
 
-        SplashScreen splashScreen = new SplashScreen();
+        new SplashScreen();
 
         backgroundImage = new ImageIcon("./data/backgroundImage.jpg");
-        JLabel myLabel = new JLabel(backgroundImage);
+        myLabel = new JLabel(backgroundImage);
         myLabel.setBounds(0,0,600,600);
 
-        // desktop = new JDesktopPane();
         frame = new JFrame("Library Management System");
         frame.add(myLabel);
 
@@ -66,22 +69,26 @@ public class LibraryUI extends JFrame {
         frame.setResizable(false);
         frame.setBounds(0, 0, 600, 600);
 
-        frame.getContentPane().setBackground(new Color(204, 204, 255));
+        // frame.getContentPane().setBackground(new Color(204, 204, 255));
         frame.setVisible(true);
     }
 
     private void addLabel() {
         JLabel label = new JLabel("Hello, Welcome to Vancouver Public Library", JLabel.CENTER);
+        label.setText("hello");
         label.setVerticalAlignment(JLabel.TOP);
         label.setForeground(Color.black);
         label.setFont(new Font("MV Boli", Font.PLAIN, 16));
-        frame.getContentPane().add(label);
+        myLabel.add(label);
+        frame.add(label);
     }
 
+    /**
+     * Helper to add buttons menu.
+     */
     private void addButtonPanel() {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(7,1));
-//        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         button1 = new JButton(new ViewBooksAction());
         button2 = new JButton(new CheckoutBookAction());
         button3 = new JButton(new ReturnBookAction());
@@ -97,10 +104,13 @@ public class LibraryUI extends JFrame {
         buttonPanel.add(button7);
         buttonPanel.add(button6);
         buttonPanel.setBounds(100,100,40,40);
-        buttonPanel.setMaximumSize(new Dimension(40,40));
         frame.getContentPane().add(buttonPanel, BorderLayout.WEST);
     }
 
+    /**
+     * Helper to save files.
+     * @throws FileNotFoundException for json operations
+     */
     private void saveOperations() throws FileNotFoundException {
         jsonWriter.open();
         jsonWriter2.open();
@@ -110,6 +120,9 @@ public class LibraryUI extends JFrame {
         jsonWriter2.close();
     }
 
+    /**
+     * Gives the user the option of saving the data before closing the application
+     */
     private void saveOnClose() {
         frame.addWindowListener(new WindowAdapter() {
 
@@ -137,6 +150,9 @@ public class LibraryUI extends JFrame {
         });
     }
 
+    /**
+     * Represents action to be taken when user wants to view list of books in library
+     */
     private class ViewBooksAction extends AbstractAction {
 
         ViewBooksAction() {
@@ -160,9 +176,6 @@ public class LibraryUI extends JFrame {
             JList<Book> list = new JList<>();
             DefaultListModel<Book> model = new DefaultListModel<>();
 
-//            List<Book> totalCatalogue = new LinkedList<>();
-//            totalCatalogue.addAll(vpl.getListOfBooks());
-
             list.setModel(model);
             list.setBounds(100, 100, 300, 300);
             list.setFont(new Font("Times New Roman", Font.PLAIN, 17));
@@ -183,6 +196,9 @@ public class LibraryUI extends JFrame {
         }
     }
 
+    /**
+     * Represents the action to be taken when user wants to check out a book
+     */
     private class CheckoutBookAction extends AbstractAction {
 
         CheckoutBookAction() {
@@ -217,6 +233,9 @@ public class LibraryUI extends JFrame {
         }
     }
 
+    /**
+     * Represents action to be taken when user wants to return a book.
+     */
     public class ReturnBookAction extends AbstractAction {
 
         ReturnBookAction() {
@@ -252,6 +271,9 @@ public class LibraryUI extends JFrame {
         }
     }
 
+    /**
+     * Represents action to be taken when user wants to filter books by genre
+     */
     private class SearchByGenreAction extends AbstractAction {
 
         SearchByGenreAction() {
@@ -280,6 +302,9 @@ public class LibraryUI extends JFrame {
         }
     }
 
+    /**
+     * Represents action to be taken when user wants to view books in his cart.
+     */
     private class ViewUserCartAction extends AbstractAction {
 
         ViewUserCartAction() {
@@ -297,6 +322,9 @@ public class LibraryUI extends JFrame {
         }
     }
 
+    /**
+     * Represents the action to be taken when the user wants to load the data from file.
+     */
     private class LoadDataAction extends AbstractAction {
 
         LoadDataAction() {
@@ -306,8 +334,10 @@ public class LibraryUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                internalFrame.dispose();
-                panel.setVisible(false);
+//                if (e.getSource() == button1) {
+//                    internalFrame.dispose();
+//                    panel.setVisible(false);
+//                }
                 user1 = jsonReader.read();
                 vpl = jsonReader2.readAddBook();
                 JOptionPane.showMessageDialog(frame,
@@ -323,6 +353,9 @@ public class LibraryUI extends JFrame {
         }
     }
 
+    /**
+     * Represents the action to be taken when the user wants to add a book to the library.
+     */
     private class AddBookAction extends AbstractAction {
 
         AddBookAction() {

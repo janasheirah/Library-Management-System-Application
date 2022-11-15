@@ -2,14 +2,14 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 
+// Represents user interface for splash screen displayed at the start of the application
 public class SplashScreen {
 
     private JFrame screen;
     private JProgressBar bar;
 
+    // EFFECTS: constructs a new frame with a progress bar and adds a background image to it
     public SplashScreen() {
         screen = new JFrame();
 
@@ -36,6 +36,8 @@ public class SplashScreen {
         screen.setVisible(false);
     }
 
+    // MODIFIES: this
+    // EFFECTS: increments the progress bar to fill from 0 to 100
     public void fill() {
         int counter = 0;
 

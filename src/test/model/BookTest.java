@@ -53,4 +53,9 @@ class BookTest {
         assertFalse(book5.availableToBorrow(lib, book5)); // not in stock and on loan
     }
 
+    @Test
+    public void testToString() {
+        assertEquals("Harry Potter by J.K. Rowling", book1.toString());
+    }
+
 }

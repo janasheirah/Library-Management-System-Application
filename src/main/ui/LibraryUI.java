@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyVetoException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -24,6 +25,7 @@ public class LibraryUI extends JFrame {
     private JPanel panel;
     private JInternalFrame internalFrame;
     private JFrame frame;
+    private JDesktopPane desktop;
     private JLabel myLabel;
     private ImageIcon backgroundImage;
     private JButton button1;
@@ -56,31 +58,19 @@ public class LibraryUI extends JFrame {
 
         backgroundImage = new ImageIcon("./data/backgroundImage.jpg");
         myLabel = new JLabel(backgroundImage);
-        myLabel.setBounds(0,0,600,600);
+        myLabel.setBounds(0, 0, 600, 600);
 
         frame = new JFrame("Library Management System");
         frame.add(myLabel);
 
-        addLabel();
         addButtonPanel();
         saveOnClose();
 
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setResizable(false);
         frame.setBounds(0, 0, 600, 600);
-
         // frame.getContentPane().setBackground(new Color(204, 204, 255));
         frame.setVisible(true);
-    }
-
-    private void addLabel() {
-        JLabel label = new JLabel("Hello, Welcome to Vancouver Public Library", JLabel.CENTER);
-        label.setText("hello");
-        label.setVerticalAlignment(JLabel.TOP);
-        label.setForeground(Color.black);
-        label.setFont(new Font("MV Boli", Font.PLAIN, 16));
-        myLabel.add(label);
-        frame.add(label);
     }
 
     /**
@@ -88,7 +78,7 @@ public class LibraryUI extends JFrame {
      */
     private void addButtonPanel() {
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(7,1));
+        buttonPanel.setLayout(new GridLayout(7, 1));
         button1 = new JButton(new ViewBooksAction());
         button2 = new JButton(new CheckoutBookAction());
         button3 = new JButton(new ReturnBookAction());
@@ -103,21 +93,27 @@ public class LibraryUI extends JFrame {
         buttonPanel.add(button3);
         buttonPanel.add(button7);
         buttonPanel.add(button6);
-        buttonPanel.setBounds(100,100,40,40);
+        buttonPanel.setBounds(100, 100, 40, 40);
         frame.getContentPane().add(buttonPanel, BorderLayout.WEST);
+        frame.add(buttonPanel, BorderLayout.WEST);
     }
 
     /**
      * Helper to save files.
-     * @throws FileNotFoundException for json operations
      */
-    private void saveOperations() throws FileNotFoundException {
-        jsonWriter.open();
-        jsonWriter2.open();
-        jsonWriter.write(user1);
-        jsonWriter2.writeAddBook(vpl);
-        jsonWriter.close();
-        jsonWriter2.close();
+    private void saveOperations() {
+        try {
+            jsonWriter.open();
+            jsonWriter2.open();
+            jsonWriter.write(user1);
+            jsonWriter2.writeAddBook(vpl);
+            jsonWriter.close();
+            jsonWriter2.close();
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(frame,
+                    "Unable to write to file: " + JSON_STORE, "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
     }
 
     /**
@@ -131,18 +127,14 @@ public class LibraryUI extends JFrame {
                 int result = JOptionPane.showConfirmDialog(frame, "Do you want to save your current data?",
                         "Save data", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 if (result == JOptionPane.YES_OPTION) {
-                    try {
-                        saveOperations();
-                        JOptionPane.showMessageDialog(frame,
-                                "Saved " + user1.getName() + "'s data to \n" + JSON_STORE + "\n" + JSON_STORE2,
-                                "Saved Data", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (FileNotFoundException exc) {
-                        JOptionPane.showMessageDialog(frame,
-                                "Unable to write to file: " + JSON_STORE, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                    saveOperations();
+                    ImageIcon image = new ImageIcon("./data/saveIcon.jpg");
+                    JOptionPane.showMessageDialog(frame,
+                            "Saved " + user1.getName() + "'s data to \n" + JSON_STORE + "\n" + JSON_STORE2,
+                            "Saved Data", JOptionPane.INFORMATION_MESSAGE, image);
                     System.exit(0);
                 } else {
-                    JOptionPane.showMessageDialog(frame,"Your data will not be saved", "Warning",
+                    JOptionPane.showMessageDialog(frame, "Your data will not be saved", "Warning",
                             JOptionPane.ERROR_MESSAGE);
                     System.exit(0);
                 }
@@ -159,19 +151,13 @@ public class LibraryUI extends JFrame {
             super("View Books");
         }
 
-        // create an internal frame and add label to print out books
-        // customize this frame by perhaps adding background picture or pictures for the books
-
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            panel = new JPanel();
-            internalFrame = new JInternalFrame();
-            panel.add(internalFrame);
-            internalFrame.setBounds(100, 100, 400, 400);
+            panel = new JPanel(new BorderLayout());
+            internalFrame = new JInternalFrame("List Of Books", true, true);
+            internalFrame.setBounds(0, 0, 200, 200);
             backgroundImage = new ImageIcon("./data/listOfBooks.jpg");
             JLabel label = new JLabel(backgroundImage);
-            internalFrame.add(label);
 
             JList<Book> list = new JList<>();
             DefaultListModel<Book> model = new DefaultListModel<>();
@@ -180,15 +166,12 @@ public class LibraryUI extends JFrame {
             list.setBounds(100, 100, 300, 300);
             list.setFont(new Font("Times New Roman", Font.PLAIN, 17));
             internalFrame.add(new JScrollPane(list));
-//            model.addAll(vpl.getListOfBooks());
 
             for (Book b : vpl.getListOfBooks()) {
                 model.addElement(b);
             }
-
             internalFrame.add(list);
             internalFrame.add(label);
-            internalFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             panel.add(internalFrame);
             frame.add(panel);
             internalFrame.setVisible(true);
@@ -207,28 +190,25 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            internalFrame.dispose();
-            panel.setVisible(false);
+            if (panel.isVisible()) {
+                internalFrame.dispose();
+                panel.setVisible(false);
+            }
             String bookName = JOptionPane.showInputDialog(frame,
-                    "Enter the name of the book you want to checkout",
-                    "Book Name?",
-                    JOptionPane.QUESTION_MESSAGE);
+                    "Enter the name of the book you want to checkout", "Book Name?", JOptionPane.QUESTION_MESSAGE);
             if (vpl.getListOfTitles().contains(bookName)) {
                 vpl.searchForBookByTitle(bookName);
                 if (user1.checkOutBook(vpl, vpl.getBookVariable())) {
                     JOptionPane.showMessageDialog(frame, "This book is now checked out: "
                                     + vpl.getBookVariable().getBookName() + " by " + vpl.getBookVariable().getAuthor(),
-                            "Checkout",
-                            JOptionPane.INFORMATION_MESSAGE);
+                            "Checkout", JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(frame,
                             bookName + " book is currently on loan and cannot be checked out. ");
                 }
             } else {
                 JOptionPane.showMessageDialog(frame,
-                        bookName + " book is not available in this library.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                        bookName + " book is not available in this library.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -244,10 +224,11 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            internalFrame.dispose();
-            panel.setVisible(false);
-            String bookName = JOptionPane.showInputDialog(frame,
-                    "Enter the name of the book you want to return",
+            if (panel.isVisible()) {
+                internalFrame.dispose();
+                panel.setVisible(false);
+            }
+            String bookName = JOptionPane.showInputDialog(frame, "Enter the name of the book you want to return",
                     "Book Name?", JOptionPane.QUESTION_MESSAGE);
 
             if (vpl.getListOfTitles().contains(bookName)) {
@@ -264,8 +245,7 @@ public class LibraryUI extends JFrame {
                             bookName + " book was not on loan so not valid to be returned. \n");
                 }
             } else {
-                JOptionPane.showMessageDialog(frame,
-                        bookName + " book is not available in this library.",
+                JOptionPane.showMessageDialog(frame, bookName + " book is not available in this library.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -282,16 +262,18 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            internalFrame.dispose();
-            panel.setVisible(false);
+            if (panel.isVisible()) {
+                internalFrame.dispose();
+                panel.setVisible(false);
+            }
             String genre = JOptionPane.showInputDialog(frame,
                     "Enter one of the following genre: Fantasy, Non Fiction, Romance, Mystery, Biography\n",
                     "Genre?",
                     JOptionPane.QUESTION_MESSAGE);
 
-            if (vpl.searchForBook(genre).isEmpty()) {
+            if (vpl.searchForBook(genre).isEmpty() || genre.isEmpty()) {
                 JOptionPane.showMessageDialog(frame,
-                         " Sorry, there are no books available for this genre\n");
+                        " Sorry, there are no books available for this genre\n");
             } else {
                 ImageIcon image = new ImageIcon("./data/icon.jpg");
                 JOptionPane.showMessageDialog(frame,
@@ -313,12 +295,15 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            internalFrame.dispose();
-            panel.setVisible(false);
+            if (panel.isVisible()) {
+                internalFrame.dispose();
+                panel.setVisible(false);
+            }
+            ImageIcon image = new ImageIcon("./data/cartIcon.jpg");
             JOptionPane.showMessageDialog(frame,
                     "Here is your checkout cart: \n " + user1.getCheckOutCartByTitle(),
                     "Checkout Cart",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.INFORMATION_MESSAGE, image);
         }
     }
 
@@ -334,10 +319,10 @@ public class LibraryUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-//                if (e.getSource() == button1) {
-//                    internalFrame.dispose();
-//                    panel.setVisible(false);
-//                }
+                if (panel.isVisible()) {
+                    internalFrame.dispose();
+                    panel.setVisible(false);
+                }
                 user1 = jsonReader.read();
                 vpl = jsonReader2.readAddBook();
                 JOptionPane.showMessageDialog(frame,
@@ -364,8 +349,10 @@ public class LibraryUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            internalFrame.dispose();
-            panel.setVisible(false);
+            if (panel.isVisible()) {
+                internalFrame.dispose();
+                panel.setVisible(false);
+            }
             String name = JOptionPane.showInputDialog(frame,
                     "Enter the name of the book you want to add \n",
                     "Book Name?",

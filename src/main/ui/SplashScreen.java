@@ -18,8 +18,6 @@ public class SplashScreen {
         bar.setBounds(0,0,600,300);
         bar.setStringPainted(true); // adds percentage
         bar.setFont(new Font("MV Boli", Font.BOLD, 16));
-        bar.setForeground(Color.WHITE);
-        bar.setBackground(Color.GREEN);
         screen.getContentPane().add(bar);
 
         screen.getContentPane().add(

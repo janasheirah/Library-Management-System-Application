@@ -27,8 +27,10 @@ Moreover, it makes the whole process of getting the books more accessible and av
 -   As a user, I want to be able to be given the option to load my previous user history (book cart and new books added) from file. 
 
 # Instructions for Grader
-- You can generate the first required event related to adding Xs to a Y by clicking on the "View Books" button to see books
-added to list of books, or "View Cart" to see books added to User's check out cart. 
+- You can see the list of Xs added to a Y by clicking the "View Books" button.
+- You can generate the first required event related to adding Xs to a Y by clicking on the "Checkout Book" button to check out
+a book from the library, or "Add Book" button to add a book to the library. 
+- These changes are displayed by clicking "View Books" button or "View Cart" button. 
 - You can generate the second required event related to adding Xs to a Y by clicking on the "Search By Genre" button to see the
 filtered books available in the library according to the genre input by user. 
 - You can locate my visual component by seeing the splash screen when the application starts or seeing icons in dialog boxes. 

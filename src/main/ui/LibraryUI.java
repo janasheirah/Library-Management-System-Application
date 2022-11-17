@@ -25,6 +25,7 @@ public class LibraryUI extends JFrame {
     private JPanel panel;
     private JInternalFrame internalFrame;
     private JFrame frame;
+    private JInternalFrame controlPanel;
     private JDesktopPane desktop;
     private JLabel myLabel;
     private ImageIcon backgroundImage;
@@ -56,6 +57,8 @@ public class LibraryUI extends JFrame {
 
         new SplashScreen();
 
+        panel = new JPanel(new BorderLayout());
+
         backgroundImage = new ImageIcon("./data/backgroundImage.jpg");
         myLabel = new JLabel(backgroundImage);
         myLabel.setBounds(0, 0, 600, 600);
@@ -69,7 +72,6 @@ public class LibraryUI extends JFrame {
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setResizable(false);
         frame.setBounds(0, 0, 600, 600);
-        // frame.getContentPane().setBackground(new Color(204, 204, 255));
         frame.setVisible(true);
     }
 
@@ -94,7 +96,6 @@ public class LibraryUI extends JFrame {
         buttonPanel.add(button7);
         buttonPanel.add(button6);
         buttonPanel.setBounds(100, 100, 40, 40);
-        frame.getContentPane().add(buttonPanel, BorderLayout.WEST);
         frame.add(buttonPanel, BorderLayout.WEST);
     }
 
@@ -155,7 +156,7 @@ public class LibraryUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             panel = new JPanel(new BorderLayout());
             internalFrame = new JInternalFrame("List Of Books", true, true);
-            internalFrame.setBounds(0, 0, 200, 200);
+            internalFrame.setBounds(0, 0, 400, 400);
             backgroundImage = new ImageIcon("./data/listOfBooks.jpg");
             JLabel label = new JLabel(backgroundImage);
 
@@ -170,12 +171,13 @@ public class LibraryUI extends JFrame {
             for (Book b : vpl.getListOfBooks()) {
                 model.addElement(b);
             }
+
             internalFrame.add(list);
             internalFrame.add(label);
             panel.add(internalFrame);
             frame.add(panel);
-            internalFrame.setVisible(true);
             panel.setVisible(true);
+            internalFrame.setVisible(true);
         }
     }
 
@@ -191,7 +193,6 @@ public class LibraryUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {
-                internalFrame.dispose();
                 panel.setVisible(false);
             }
             String bookName = JOptionPane.showInputDialog(frame,
@@ -225,7 +226,6 @@ public class LibraryUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {
-                internalFrame.dispose();
                 panel.setVisible(false);
             }
             String bookName = JOptionPane.showInputDialog(frame, "Enter the name of the book you want to return",
@@ -263,7 +263,6 @@ public class LibraryUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {
-                internalFrame.dispose();
                 panel.setVisible(false);
             }
             String genre = JOptionPane.showInputDialog(frame,
@@ -296,7 +295,6 @@ public class LibraryUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {
-                internalFrame.dispose();
                 panel.setVisible(false);
             }
             ImageIcon image = new ImageIcon("./data/cartIcon.jpg");
@@ -320,7 +318,6 @@ public class LibraryUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             try {
                 if (panel.isVisible()) {
-                    internalFrame.dispose();
                     panel.setVisible(false);
                 }
                 user1 = jsonReader.read();
@@ -350,7 +347,6 @@ public class LibraryUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {
-                internalFrame.dispose();
                 panel.setVisible(false);
             }
             String name = JOptionPane.showInputDialog(frame,

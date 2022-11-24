@@ -1,6 +1,7 @@
 package ui;
 
 import model.Book;
+import model.Event;
 import model.EventLog;
 import model.Library;
 import model.User;
@@ -118,6 +119,15 @@ public class LibraryUI extends JFrame {
     }
 
     /**
+     * EFFECTS: prints all the events logged in the application to the console
+     */
+    public void printLog() {
+        for (Event e : el) {
+            System.out.println(e.toString());
+        }
+    }
+
+    /**
      * EFFECTS: Gives the user the option of saving the data before closing the application
      */
     private void saveOnClose() {
@@ -138,7 +148,7 @@ public class LibraryUI extends JFrame {
                             JOptionPane.ERROR_MESSAGE);
                 }
                 el = EventLog.getInstance();
-                el.printLog();
+                printLog();
                 System.exit(0);
             }
 

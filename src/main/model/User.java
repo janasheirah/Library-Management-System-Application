@@ -55,6 +55,7 @@ public class User implements Writable {
         if (bk.availableToBorrow(lib, bk)) {
             bk.setLoanStatus(true);
             addBookToCart(bk);
+            EventLog.getInstance().logEvent(new Event("Checked out book: " + bk.getBookName()));
             return true;
         }
         return false;
@@ -68,6 +69,7 @@ public class User implements Writable {
         if (bk.onLoan()) {
             bk.setLoanStatus(false);
             checkOutCart.remove(bk);
+            EventLog.getInstance().logEvent(new Event("Returned book: " + bk.getBookName()));
             return true;
         } else {
             return false;

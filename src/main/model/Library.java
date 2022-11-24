@@ -83,6 +83,7 @@ public class Library implements Writable {
                 booksByGenre.add(book.getBookName());
             }
         }
+        EventLog.getInstance().logEvent(new Event("Searched for genre " + genre));
         return booksByGenre;
     }
 
@@ -116,6 +117,7 @@ public class Library implements Writable {
     public void addBook(Book book) {
         booksAddedByLibrarian.add(book);
         listOfBooks.add(book);
+        EventLog.getInstance().logEvent(new Event("Added book: " + book.getBookName()));
     }
 
     @Override

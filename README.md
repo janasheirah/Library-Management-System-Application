@@ -37,3 +37,14 @@ filtered books available in the library according to the genre input by user.
 - You can save the state of my application by trying to close the application by clicking on the x button and clicking "yes" for wanting 
 to save the current user data. 
 - You can reload the state of my application by clicking on the "Load" button when the application starts in the button panel on the left.
+
+# Phase 4: Task 2
+## Logged Events:
+Thu Nov 24 09:38:23 PST 2022
+Searched for genre Fantasy
+Thu Nov 24 09:38:30 PST 2022
+Checked out book: Harry Potter
+Thu Nov 24 09:38:35 PST 2022
+Returned book: Harry Potter
+Thu Nov 24 09:38:49 PST 2022
+Added book: November 9 

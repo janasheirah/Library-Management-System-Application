@@ -1,6 +1,7 @@
 package ui;
 
 import model.Book;
+import model.EventLog;
 import model.Library;
 import model.User;
 import persistence.JsonReader;
@@ -11,9 +12,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.beans.PropertyVetoException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Represents application's main window frame.
@@ -25,8 +26,6 @@ public class LibraryUI extends JFrame {
     private JPanel panel;
     private JInternalFrame internalFrame;
     private JFrame frame;
-    private JInternalFrame controlPanel;
-    private JDesktopPane desktop;
     private JLabel myLabel;
     private ImageIcon backgroundImage;
     private JButton button1;
@@ -42,9 +41,10 @@ public class LibraryUI extends JFrame {
     private JsonReader jsonReader2;
     private Library vpl;
     private User user1;
+    private EventLog el;
 
     /**
-     * Constructor sets up frame, adds button panel and adds background image.
+     * EFFECTS: Constructor sets up frame, adds button panel and adds background image.
      */
     public LibraryUI() {
 
@@ -76,7 +76,7 @@ public class LibraryUI extends JFrame {
     }
 
     /**
-     * Helper to add buttons menu.
+     * EFFECTS: Helper to add buttons menu.
      */
     private void addButtonPanel() {
         JPanel buttonPanel = new JPanel();
@@ -100,7 +100,7 @@ public class LibraryUI extends JFrame {
     }
 
     /**
-     * Helper to save files.
+     * EFFECTS: Helper to save files.
      */
     private void saveOperations() {
         try {
@@ -118,7 +118,7 @@ public class LibraryUI extends JFrame {
     }
 
     /**
-     * Gives the user the option of saving the data before closing the application
+     * EFFECTS: Gives the user the option of saving the data before closing the application
      */
     private void saveOnClose() {
         frame.addWindowListener(new WindowAdapter() {
@@ -133,13 +133,15 @@ public class LibraryUI extends JFrame {
                     JOptionPane.showMessageDialog(frame,
                             "Saved " + user1.getName() + "'s data to \n" + JSON_STORE + "\n" + JSON_STORE2,
                             "Saved Data", JOptionPane.INFORMATION_MESSAGE, image);
-                    System.exit(0);
                 } else {
                     JOptionPane.showMessageDialog(frame, "Your data will not be saved", "Warning",
                             JOptionPane.ERROR_MESSAGE);
-                    System.exit(0);
                 }
+                el = EventLog.getInstance();
+                el.printLog();
+                System.exit(0);
             }
+
         });
     }
 
@@ -152,9 +154,10 @@ public class LibraryUI extends JFrame {
             super("View Books");
         }
 
+        // EFFECTS: displays list of books in library when button is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
-            panel = new JPanel(new BorderLayout());
+//            panel = new JPanel(new BorderLayout());
             internalFrame = new JInternalFrame("List Of Books", true, true);
             internalFrame.setBounds(0, 0, 400, 400);
             backgroundImage = new ImageIcon("./data/listOfBooks.jpg");
@@ -190,6 +193,7 @@ public class LibraryUI extends JFrame {
             super("Checkout Book");
         }
 
+        // EFFECTS: checks out book given by user when button is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {
@@ -223,6 +227,7 @@ public class LibraryUI extends JFrame {
             super("Return book");
         }
 
+        // EFFECTS: returns the book input by user when "Return book" button is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {
@@ -260,6 +265,7 @@ public class LibraryUI extends JFrame {
             super("Search By Genre");
         }
 
+        // EFFECTS: searches for books with genre input by user when "Search By Genre" button is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {
@@ -270,15 +276,16 @@ public class LibraryUI extends JFrame {
                     "Genre?",
                     JOptionPane.QUESTION_MESSAGE);
 
-            if (vpl.searchForBook(genre).isEmpty() || genre.isEmpty()) {
+            List<String> result = vpl.searchForBook(genre);
+
+            if (result.isEmpty() || genre.isEmpty()) {
                 JOptionPane.showMessageDialog(frame,
                         " Sorry, there are no books available for this genre\n");
             } else {
                 ImageIcon image = new ImageIcon("./data/icon.jpg");
                 JOptionPane.showMessageDialog(frame,
-                        "These are the available books for " + genre + "\n " + vpl.searchForBook(genre),
-                        "Filtered Books", JOptionPane.INFORMATION_MESSAGE,
-                        image);
+                        "These are the available books for " + genre + "\n " + result,
+                        "Filtered Books", JOptionPane.INFORMATION_MESSAGE, image);
             }
         }
     }
@@ -292,6 +299,7 @@ public class LibraryUI extends JFrame {
             super("View Checkout Cart");
         }
 
+        // EFFECTS: displays list of books available in user's checkout cart when "View Cart" button is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {
@@ -314,6 +322,7 @@ public class LibraryUI extends JFrame {
             super("Load");
         }
 
+        // EFFECTS: loads data from file when "Load" button is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
@@ -344,6 +353,7 @@ public class LibraryUI extends JFrame {
             super("Add Book");
         }
 
+        // EFFECTS: adds book given by user to list of books when "Add Book" button is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
             if (panel.isVisible()) {

@@ -1,6 +1,5 @@
 package ui;
 
-
 import model.Book;
 import model.Librarian;
 import model.Library;
@@ -20,7 +19,6 @@ public class LibraryApp {
     private static final String JSON_STORE = "./data/checkoutCart.json";
     private static final String JSON_STORE2 = "./data/newBooks.json";
     private User user1;
-    private Librarian librarian;
     private Scanner input;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
@@ -90,7 +88,7 @@ public class LibraryApp {
     // EFFECTS: initializes accounts
     private void init() {
         user1 = new User("User's Checkout Cart");
-        librarian = new Librarian("Librarian1");
+//        librarian = new Librarian("Librarian1");
         input = new Scanner(System.in);
         input.useDelimiter("\n");
     }

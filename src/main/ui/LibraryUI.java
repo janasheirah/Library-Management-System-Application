@@ -167,7 +167,6 @@ public class LibraryUI extends JFrame {
         // EFFECTS: displays list of books in library when button is clicked
         @Override
         public void actionPerformed(ActionEvent e) {
-//            panel = new JPanel(new BorderLayout());
             internalFrame = new JInternalFrame("List Of Books", true, true);
             internalFrame.setBounds(0, 0, 400, 400);
             backgroundImage = new ImageIcon("./data/listOfBooks.jpg");

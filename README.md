@@ -38,13 +38,18 @@ filtered books available in the library according to the genre input by user.
 to save the current user data. 
 - You can reload the state of my application by clicking on the "Load" button when the application starts in the button panel on the left.
 
-# Phase 4: Task 2
-## Logged Events:
+# Phase 4: Task 2 Logged Events:
 Thu Nov 24 09:38:23 PST 2022
-Searched for genre Fantasy
-Thu Nov 24 09:38:30 PST 2022
-Checked out book: Harry Potter
-Thu Nov 24 09:38:35 PST 2022
-Returned book: Harry Potter
-Thu Nov 24 09:38:49 PST 2022
-Added book: November 9 
+<br> Searched for genre Fantasy
+<br> Thu Nov 24 09:38:30 PST 2022
+<br> Checked out book: Harry Potter
+<br> Thu Nov 24 09:38:35 PST 2022
+<br> Returned book: Harry Potter
+<br> Thu Nov 24 09:38:49 PST 2022
+<br> Added book: November 9 
+
+# Phase 4: Task 3 UML Diagram
+
+# Phase 4: Task 4 Refactoring:
+- If I had more time I would do the following refactoring to my code:
+- Since there are repetitive methods in my UI class, all using the dialog boxes, I would refactor

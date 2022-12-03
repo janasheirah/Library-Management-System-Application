@@ -57,10 +57,10 @@ Attached in the root folder of the project
 - My original plan was to include more actions for a librarian to know more information about users and manage the list of books in the library, 
 so I could make a new abstract class called User and have both Librarian and StudentUser extend it since they will probably have a lot of similar behavior.
 Note: Now, the librarian class is redundant (since it doesn't have any implementations) and can be removed both from my classes and UML Diagram, but I left it there as a possibility of further implementation and development of the project. 
-- Due to the presence of repetitive code in the UI class that hides the panel in all methods, I can extract this method into one method and replace the repetitive code with a single call to this method,
-  (which improves coupling) or another solution to this is making it a JDesktopPane instead of JFrame to include other Java Swing components in it and they can close by themselves without the need for a method to to so.
+- Due to the presence of repetitive code in the UI class that hides the panel in all methods, I can extract this behavior into one method and replace the repetitive code with a single call to this method,
+  (which improves coupling) or another solution to this is making the main window a JDesktopPane instead of JFrame to include other Java Swing components in it, and they can close by themselves without the need for a method to do so.
+- In order for my design to follow the single responsibility principle, I can move some of the methods that have to do with adding books to the library to the librarian class for less coupling and
+the library class can then only be responsible for the methods directly related to it like searching for books by genres and titles.
 - In expanding my project to include more features in the user interface, I would use the composite design pattern to design the frame and have a Component class
 and a composite class where I can add panels and other children including buttons, internal frames, dialog boxes and child panels to it, in order to improve cohesion. This can also remove the presence
-of nested classes in the UI which is making the class quite long. 
-- In order for my design to follow the single responsibility principle, I can move some of the methods that have to do with adding books to the library to the librarian class for less coupling and 
-the library class can then only be responsible for the methods directly related to it like searching for books by genres and titles.
+of nested classes in the UI which is making the class quite long.

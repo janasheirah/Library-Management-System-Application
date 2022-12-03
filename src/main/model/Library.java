@@ -83,7 +83,7 @@ public class Library implements Writable {
                 booksByGenre.add(book.getBookName());
             }
         }
-        EventLog.getInstance().logEvent(new Event("Searched for genre " + genre));
+        EventLog.getInstance().logEvent(new Event("Searched for genre: " + genre));
         return booksByGenre;
     }
 
